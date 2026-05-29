@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | TurboURL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar"><a href="index.html" class="brand">Turbo<span>URL</span></a>
+        <div id="nav-actions"></div>
+    </nav>
+    <main class="container" style="padding-top: 110px;">
+        <h2 id="user-welcome" style="margin-bottom: 2rem;">Olá!</h2>
+        <div class="card" style="margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Novo Link</h3>
+            <form onsubmit="Pages.shorten(event)" style="display:flex; gap:10px;">
+                <input type="url" name="url" placeholder="Sua URL longa aqui..." class="form-control" required>
+                <select name="expiresIn" class="form-control" style="width:150px">
+                    <option value="1h">1 Hora</option>
+                    <option value="6h">6 Horas</option>
+                    <option value="1d">1 Dia</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Encurtar</button>
+            </form>
+        </div>
+        <h3>Seus Links</h3>
+        <div id="links-list" style="margin-top: 1rem;"></div>
+        <div style="margin-top: 3rem;"><a href="profile.html" class="btn btn-outline">Configurações de Conta</a></div>
+    </main>
+    <div id="toast" class="toast"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>

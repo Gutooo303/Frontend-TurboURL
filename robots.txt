@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /profile.html
+Sitemap: https://turbourl.onrender.com/sitemap.xml

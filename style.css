@@ -1,0 +1,195 @@
+:root {
+    --bg-main      : #06090E;
+    --bg-card      : #0D121B;
+    --bg-input     : #141B29;
+    --primary      : #FF00FF;
+    --primary-hover: #D900D9;
+    --primary-glow : rgba(255, 0, 255, 0.4);
+    --text-main    : #F8FAFC;
+    --text-muted   : #94A3B8;
+    --danger       : #FF4D4D;
+    --success      : #10B981;
+    --border       : #1E293B;
+    --radius       : 12px;
+    --transition   : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin     : 0;
+    padding    : 0;
+    box-sizing : border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color           : var(--text-main);
+    line-height     : 1.6;
+    min-height      : 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background   : var(--border);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin   : 0 auto;
+    padding  : 0 2rem;
+}
+
+.navbar {
+    position       : fixed;
+    top            : 0;
+    width          : 100%;
+    height         : 75px;
+    background     : rgba(6, 9, 14, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom  : 1px solid var(--border);
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    padding        : 0 5%;
+    z-index        : 1000;
+}
+
+.brand {
+    font-size      : 1.6rem;
+    font-weight    : 800;
+    text-decoration: none;
+    color          : white;
+}
+
+.brand span {
+    color      : var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* UI Elements */
+.card {
+    background   : var(--bg-card);
+    border       : 1px solid var(--border);
+    padding      : 2rem;
+    border-radius: var(--radius);
+    box-shadow   : 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+    padding        : 0.7rem 1.5rem;
+    border-radius  : 8px;
+    border         : none;
+    font-weight    : 600;
+    cursor         : pointer;
+    transition     : var(--transition);
+    text-decoration: none;
+    display        : inline-flex;
+    align-items    : center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color     : white;
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform : translateY(-2px);
+    box-shadow: 0 8px 25px var(--primary-glow);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor : not-allowed;
+}
+
+.btn-outline {
+    background: transparent;
+    border    : 1px solid var(--border);
+    color     : white;
+}
+
+.btn-outline:hover {
+    border-color: var(--primary);
+    color       : var(--primary);
+}
+
+.form-control {
+    width        : 100%;
+    padding      : 0.8rem 1rem;
+    background   : var(--bg-input);
+    border       : 1px solid var(--border);
+    border-radius: 8px;
+    color        : white;
+    transition   : var(--transition);
+    font-size    : 1rem;
+}
+
+.form-control:focus {
+    outline     : none;
+    border-color: var(--primary);
+    box-shadow  : 0 0 0 3px var(--primary-glow);
+}
+
+/* Dashboard Specific */
+.link-item {
+    background     : var(--bg-input);
+    border         : 1px solid var(--border);
+    padding        : 1.2rem;
+    border-radius  : 10px;
+    margin-bottom  : 1rem;
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+}
+
+/* Toasts */
+.toast {
+    position     : fixed;
+    bottom       : 20px;
+    right        : 20px;
+    padding      : 1rem 2rem;
+    border-radius: 8px;
+    color        : white;
+    font-weight  : 600;
+    z-index      : 10000;
+    transform    : translateY(100px);
+    opacity      : 0;
+    transition   : var(--transition);
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity  : 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity  : 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity  : 1;
+        transform: translateY(0);
+    }
+}
+
+.animate {
+    animation: fadeIn 0.4s ease forwards;
+}

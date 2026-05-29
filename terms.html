@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso | TurboURL</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .legal-content h2 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+        }
+
+        .legal-content p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .legal-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .legal-content li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="brand">Turbo<span>URL</span></a>
+        <div id="nav-actions">
+            <a href="register.html" class="btn btn-outline">Voltar ao Registro</a>
+        </div>
+    </nav>
+
+    <main class="container animate" style="padding-top: 120px; padding-bottom: 60px; max-width: 800px;">
+        <div class="card legal-content">
+            <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Termos de Uso</h1>
+            <p><strong>Última atualização:</strong> Maio de 2026</p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 2rem 0;">
+
+            <h2>1. Objeto do Serviço</h2>
+            <p>O TurboURL é uma plataforma SaaS que oferece ferramentas de encurtamento de URLs e gestão de links
+                temporários. Ao acessar nosso site, você concorda em cumprir estes termos de serviço e todas as leis
+                aplicáveis.</p>
+
+            <h2>2. Responsabilidades do Usuário</h2>
+            <ul>
+                <li>Você é o único responsável pelo conteúdo das URLs que decide encurtar.</li>
+                <li>É proibido o uso da ferramenta para fins ilícitos, incluindo phishing, disseminação de vírus ou
+                    spam.</li>
+                <li>Você deve manter a segurança de sua conta e notificar-nos sobre qualquer uso não autorizado.</li>
+            </ul>
+
+            <h2>3. Limitações de Uso (Rate Limit)</h2>
+            <p>Para garantir a performance da API, limitamos o uso a <strong>100 requisições a cada 15 minutos</strong>
+                por usuário. O descumprimento sistemático deste limite pode levar à suspensão da conta.</p>
+
+            <h2>4. Expiração e Exclusão</h2>
+            <p>Os links gerados possuem prazos de validade definidos pelo usuário (1h a 24h). O TurboURL não garante a
+                persistência de links após o período de expiração selecionado.</p>
+
+            <h2>5. Alterações nos Termos</h2>
+            <p>Reservamos o direito de modificar estes termos a qualquer momento. O uso contínuo da plataforma após
+                alterações constitui aceitação dos novos termos.</p>
+
+            <div style="margin-top: 3rem;">
+                <a href="register.html" class="btn btn-primary">Entendido, ir para Registro</a>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>
