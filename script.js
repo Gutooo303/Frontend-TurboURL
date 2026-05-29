@@ -11,9 +11,16 @@ const AppConfig = {
 const Storage = {
     setUserId: (id) => localStorage.setItem('turbourl_id', id),
 
+    setUserName: (name) => localStorage.setItem('turbourl_name', name),
+
     getUserId: () => localStorage.getItem('turbourl_id'),
 
-    clear: () => localStorage.removeItem('turbourl_id')
+    getUserName: () => localStorage.getItem('turbourl_name'),
+
+    clear: () => {
+        localStorage.removeItem('turbourl_id');
+        localStorage.removeItem('turbourl_name');
+    }
 };
 
 const API = {
@@ -29,9 +36,6 @@ const API = {
         }
 
         try {
-            console.log('ENDPOINT:', endpoint);
-            console.log('BODY:', body);
-
             const response = await fetch(
                 `${AppConfig.BASE_URL}${endpoint}`,
                 options
@@ -39,17 +43,12 @@ const API = {
 
             const text = await response.text();
 
-            console.log('STATUS:', response.status);
-            console.log('RESPONSE:', text);
-
             let data = {};
 
             try {
                 data = text ? JSON.parse(text) : {};
             } catch {
-                data = {
-                    message: text
-                };
+                data = { message: text };
             }
 
             if (response.status === 429) {
@@ -70,10 +69,7 @@ const API = {
         } catch (err) {
             console.error(err);
 
-            UI.toast(
-                err.message || 'Erro de conexão',
-                'error'
-            );
+            UI.toast(err.message || 'Erro de conexão', 'error');
 
             throw err;
         }
@@ -109,34 +105,18 @@ const UI = {
 
         nav.innerHTML = id
             ? `
-                <a
-                    href="dashboard.html"
-                    class="btn btn-outline"
-                    style="margin-right:10px"
-                >
+                <a href="dashboard.html" class="btn btn-outline" style="margin-right:10px">
                     Painel
                 </a>
-
-                <button
-                    onclick="Pages.logout()"
-                    class="btn btn-primary"
-                >
+                <button onclick="Pages.logout()" class="btn btn-primary">
                     Sair
                 </button>
             `
             : `
-                <a
-                    href="login.html"
-                    class="btn btn-outline"
-                    style="margin-right:10px"
-                >
+                <a href="login.html" class="btn btn-outline" style="margin-right:10px">
                     Login
                 </a>
-
-                <a
-                    href="register.html"
-                    class="btn btn-primary"
-                >
+                <a href="register.html" class="btn btn-primary">
                     Criar Conta
                 </a>
             `;
@@ -155,11 +135,7 @@ const Pages = {
             password: form.querySelector('[name="password"]').value
         };
 
-        await API.call(
-            AppConfig.ENDPOINTS.REGISTER,
-            'POST',
-            payload
-        );
+        await API.call(AppConfig.ENDPOINTS.REGISTER, 'POST', payload);
 
         UI.toast('Conta criada com sucesso!');
 
@@ -184,9 +160,8 @@ const Pages = {
             payload
         );
 
-        console.log('LOGIN DATA:', data);
-
         Storage.setUserId(data.id);
+        Storage.setUserName(data.user?.name);
 
         UI.toast('Login realizado com sucesso!');
 
@@ -203,14 +178,14 @@ const Pages = {
             return;
         }
 
-        const data = await API.call(
-            AppConfig.ENDPOINTS.USER(id)
-        );
+        const data = await API.call(AppConfig.ENDPOINTS.USER(id));
 
         const welcome = document.getElementById('user-welcome');
 
+        const name = Storage.getUserName() || data.name;
+
         if (welcome) {
-            welcome.innerText = `Olá, ${data.name}`;
+            welcome.innerText = `Olá, ${name}`;
         }
 
         const list = document.getElementById('links-list');
@@ -221,28 +196,14 @@ const Pages = {
             ? data.links.map(link => `
                 <div class="link-item animate">
                     <div>
-                        <p
-                            style="
-                                color:var(--primary);
-                                font-weight:bold
-                            "
-                        >
+                        <p style="color:var(--primary); font-weight:bold">
                             /${link.shortId}
                         </p>
-
-                        <small
-                            style="
-                                color:var(--text-muted)
-                            "
-                        >
+                        <small style="color:var(--text-muted)">
                             ${link.originalUrl}
                         </small>
                     </div>
-
-                    <button
-                        class="btn btn-outline"
-                        onclick="Pages.copy('${link.shortId}')"
-                    >
+                    <button class="btn btn-outline" onclick="Pages.copy('${link.shortId}')">
                         Copiar
                     </button>
                 </div>
@@ -262,11 +223,7 @@ const Pages = {
             expiresIn: form.querySelector('[name="expiresIn"]').value
         };
 
-        await API.call(
-            AppConfig.ENDPOINTS.SHORTEN(id),
-            'POST',
-            payload
-        );
+        await API.call(AppConfig.ENDPOINTS.SHORTEN(id), 'POST', payload);
 
         UI.toast('URL encurtada com sucesso!');
 
@@ -283,26 +240,20 @@ const Pages = {
             return;
         }
 
-        const data = await API.call(
-            AppConfig.ENDPOINTS.USER(id)
-        );
+        const data = await API.call(AppConfig.ENDPOINTS.USER(id));
 
         const form = document.getElementById('profile-form');
 
         if (!form) return;
 
-        form.querySelector('[name="name"]').value =
-            data.name || '';
-
-        form.querySelector('[name="email"]').value =
-            data.email || '';
+        form.querySelector('[name="name"]').value = data.name || '';
+        form.querySelector('[name="email"]').value = data.email || '';
     },
 
     async updateProfile(e) {
         e.preventDefault();
 
         const form = e.target;
-
         const id = Storage.getUserId();
 
         const payload = {
@@ -310,50 +261,32 @@ const Pages = {
             email: form.querySelector('[name="email"]').value
         };
 
-        const password =
-            form.querySelector('[name="password"]').value;
+        const password = form.querySelector('[name="password"]').value;
 
-        if (password) {
-            payload.password = password;
-        }
+        if (password) payload.password = password;
 
-        await API.call(
-            AppConfig.ENDPOINTS.USER(id),
-            'PUT',
-            payload
-        );
+        await API.call(AppConfig.ENDPOINTS.USER(id), 'PUT', payload);
 
         UI.toast('Perfil atualizado com sucesso!');
     },
 
     async deleteAccount() {
-        const confirmDelete = confirm(
-            'Deseja realmente excluir sua conta permanentemente?'
-        );
+        const confirmDelete = confirm('Deseja realmente excluir sua conta permanentemente?');
 
         if (!confirmDelete) return;
 
-        await API.call(
-            AppConfig.ENDPOINTS.USER(
-                Storage.getUserId()
-            ),
-            'DELETE'
-        );
+        await API.call(AppConfig.ENDPOINTS.USER(Storage.getUserId()), 'DELETE');
 
         this.logout();
     },
 
     copy(code) {
-        navigator.clipboard.writeText(
-            `${window.location.origin}/${code}`
-        );
-
+        navigator.clipboard.writeText(`${window.location.origin}/${code}`);
         UI.toast('Link copiado!');
     },
 
     logout() {
         Storage.clear();
-
         window.location.href = 'index.html';
     }
 };
@@ -361,45 +294,10 @@ const Pages = {
 document.addEventListener('DOMContentLoaded', () => {
     UI.updateNav();
 
-    const loginForm =
-        document.getElementById('login-form');
-
-    if (loginForm) {
-        loginForm.addEventListener(
-            'submit',
-            Pages.login
-        );
-    }
-
-    const registerForm =
-        document.getElementById('register-form');
-
-    if (registerForm) {
-        registerForm.addEventListener(
-            'submit',
-            Pages.register
-        );
-    }
-
-    const shortenForm =
-        document.getElementById('shorten-form');
-
-    if (shortenForm) {
-        shortenForm.addEventListener(
-            'submit',
-            Pages.shorten
-        );
-    }
-
-    const profileForm =
-        document.getElementById('profile-form');
-
-    if (profileForm) {
-        profileForm.addEventListener(
-            'submit',
-            Pages.updateProfile
-        );
-    }
+    document.getElementById('login-form')?.addEventListener('submit', Pages.login);
+    document.getElementById('register-form')?.addEventListener('submit', Pages.register);
+    document.getElementById('shorten-form')?.addEventListener('submit', Pages.shorten);
+    document.getElementById('profile-form')?.addEventListener('submit', Pages.updateProfile);
 
     const path = window.location.pathname;
 
