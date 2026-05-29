@@ -9,9 +9,15 @@ const AppConfig = {
 };
 
 const Storage = {
-    setUserId: (id) => localStorage.setItem('turbourl_id', id),
+    setUserId: (id) => {
+        if (!id) return;
+        localStorage.setItem('turbourl_id', id);
+    },
 
-    setUserName: (name) => localStorage.setItem('turbourl_name', name),
+    setUserName: (name) => {
+        if (!name) return;
+        localStorage.setItem('turbourl_name', name);
+    },
 
     getUserId: () => localStorage.getItem('turbourl_id'),
 
@@ -25,10 +31,7 @@ const Storage = {
 
 const API = {
     async call(endpoint, method = 'GET', body = null) {
-        const options = {
-            method,
-            headers: {}
-        };
+        const options = { method, headers: {} };
 
         if (body) {
             options.headers['Content-Type'] = 'application/json';
@@ -36,15 +39,11 @@ const API = {
         }
 
         try {
-            const response = await fetch(
-                `${AppConfig.BASE_URL}${endpoint}`,
-                options
-            );
+            const response = await fetch(`${AppConfig.BASE_URL}${endpoint}`, options);
 
             const text = await response.text();
 
             let data = {};
-
             try {
                 data = text ? JSON.parse(text) : {};
             } catch {
@@ -52,25 +51,17 @@ const API = {
             }
 
             if (response.status === 429) {
-                throw new Error(
-                    'Limite de requisições atingido. Tente novamente em 15 minutos.'
-                );
+                throw new Error('Limite de requisições atingido. Tente novamente em 15 minutos.');
             }
 
             if (!response.ok) {
-                throw new Error(
-                    data.error ||
-                    data.message ||
-                    `Erro ${response.status}`
-                );
+                throw new Error(data.error || data.message || `Erro ${response.status}`);
             }
 
             return data;
         } catch (err) {
             console.error(err);
-
             UI.toast(err.message || 'Erro de conexão', 'error');
-
             throw err;
         }
     }
@@ -79,26 +70,17 @@ const API = {
 const UI = {
     toast(msg, type = 'success') {
         const toast = document.getElementById('toast');
-
         if (!toast) return;
 
         toast.innerText = msg;
-
-        toast.style.background =
-            type === 'success'
-                ? 'var(--success)'
-                : 'var(--danger)';
-
+        toast.style.background = type === 'success' ? 'var(--success)' : 'var(--danger)';
         toast.classList.add('show');
 
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
+        setTimeout(() => toast.classList.remove('show'), 3000);
     },
 
     updateNav() {
         const nav = document.getElementById('nav-actions');
-
         if (!nav) return;
 
         const id = Storage.getUserId();
@@ -141,7 +123,7 @@ const Pages = {
 
         setTimeout(() => {
             window.location.href = 'login.html';
-        }, 1500);
+        }, 1200);
     },
 
     async login(e) {
@@ -154,20 +136,27 @@ const Pages = {
             password: form.querySelector('[name="password"]').value
         };
 
-        const data = await API.call(
-            AppConfig.ENDPOINTS.LOGIN,
-            'POST',
-            payload
-        );
+        const data = await API.call(AppConfig.ENDPOINTS.LOGIN, 'POST', payload);
 
-        Storage.setUserId(data.id);
-        Storage.setUserName(data.user?.name);
+        const userId = data.id || data.user?.id;
+        const userName = data.name || data.user?.name;
+
+        Storage.setUserId(userId);
+
+        if (userName) {
+            Storage.setUserName(userName);
+        } else {
+            try {
+                const user = await API.call(AppConfig.ENDPOINTS.USER(userId));
+                Storage.setUserName(user.name);
+            } catch {}
+        }
 
         UI.toast('Login realizado com sucesso!');
 
         setTimeout(() => {
             window.location.href = 'dashboard.html';
-        }, 1000);
+        }, 900);
     },
 
     async loadDashboard() {
@@ -182,18 +171,19 @@ const Pages = {
 
         const welcome = document.getElementById('user-welcome');
 
-        const name = Storage.getUserName() || data.name;
+        const name = Storage.getUserName() || data.name || 'usuário';
 
         if (welcome) {
             welcome.innerText = `Olá, ${name}`;
         }
 
         const list = document.getElementById('links-list');
-
         if (!list) return;
 
-        list.innerHTML = data.links?.length
-            ? data.links.map(link => `
+        const links = data.links || [];
+
+        list.innerHTML = links.length
+            ? links.map(link => `
                 <div class="link-item animate">
                     <div>
                         <p style="color:var(--primary); font-weight:bold">
@@ -215,7 +205,6 @@ const Pages = {
         e.preventDefault();
 
         const form = e.target;
-
         const id = Storage.getUserId();
 
         const payload = {
@@ -226,7 +215,6 @@ const Pages = {
         await API.call(AppConfig.ENDPOINTS.SHORTEN(id), 'POST', payload);
 
         UI.toast('URL encurtada com sucesso!');
-
         form.reset();
 
         await this.loadDashboard();
@@ -243,7 +231,6 @@ const Pages = {
         const data = await API.call(AppConfig.ENDPOINTS.USER(id));
 
         const form = document.getElementById('profile-form');
-
         if (!form) return;
 
         form.querySelector('[name="name"]').value = data.name || '';
@@ -262,18 +249,20 @@ const Pages = {
         };
 
         const password = form.querySelector('[name="password"]').value;
-
         if (password) payload.password = password;
 
-        await API.call(AppConfig.ENDPOINTS.USER(id), 'PUT', payload);
+        const updated = await API.call(AppConfig.ENDPOINTS.USER(id), 'PUT', payload);
+
+        if (updated?.name) {
+            Storage.setUserName(updated.name);
+        }
 
         UI.toast('Perfil atualizado com sucesso!');
     },
 
     async deleteAccount() {
-        const confirmDelete = confirm('Deseja realmente excluir sua conta permanentemente?');
-
-        if (!confirmDelete) return;
+        const ok = confirm('Deseja realmente excluir sua conta permanentemente?');
+        if (!ok) return;
 
         await API.call(AppConfig.ENDPOINTS.USER(Storage.getUserId()), 'DELETE');
 
@@ -281,7 +270,8 @@ const Pages = {
     },
 
     copy(code) {
-        navigator.clipboard.writeText(`${window.location.origin}/${code}`);
+        const url = `${window.location.origin}/${code}`;
+        navigator.clipboard.writeText(url);
         UI.toast('Link copiado!');
     },
 
@@ -301,11 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const path = window.location.pathname;
 
-    if (path.includes('dashboard.html')) {
-        Pages.loadDashboard();
-    }
-
-    if (path.includes('profile.html')) {
-        Pages.loadProfile();
-    }
+    if (path.includes('dashboard.html')) Pages.loadDashboard();
+    if (path.includes('profile.html')) Pages.loadProfile();
 });
