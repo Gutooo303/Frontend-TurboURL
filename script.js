@@ -10,7 +10,9 @@ const AppConfig = {
 
 const Storage = {
     setUserId: (id) => localStorage.setItem('turbourl_id', id),
+
     getUserId: () => localStorage.getItem('turbourl_id'),
+
     clear: () => localStorage.removeItem('turbourl_id')
 };
 
@@ -18,26 +20,37 @@ const API = {
     async call(endpoint, method = 'GET', body = null) {
         const options = {
             method,
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: {}
         };
 
         if (body) {
+            options.headers['Content-Type'] = 'application/json';
             options.body = JSON.stringify(body);
         }
 
         try {
+            console.log('ENDPOINT:', endpoint);
+            console.log('BODY:', body);
+
             const response = await fetch(
                 `${AppConfig.BASE_URL}${endpoint}`,
                 options
             );
 
+            const text = await response.text();
+
+            console.log('STATUS:', response.status);
+            console.log('RESPONSE:', text);
+
             let data = {};
 
             try {
-                data = await response.json();
-            } catch {}
+                data = text ? JSON.parse(text) : {};
+            } catch {
+                data = {
+                    message: text
+                };
+            }
 
             if (response.status === 429) {
                 throw new Error(
@@ -46,12 +59,22 @@ const API = {
             }
 
             if (!response.ok) {
-                throw new Error(data.error || 'Erro na requisição');
+                throw new Error(
+                    data.error ||
+                    data.message ||
+                    `Erro ${response.status}`
+                );
             }
 
             return data;
         } catch (err) {
-            UI.toast(err.message, 'error');
+            console.error(err);
+
+            UI.toast(
+                err.message || 'Erro de conexão',
+                'error'
+            );
+
             throw err;
         }
     }
@@ -86,20 +109,34 @@ const UI = {
 
         nav.innerHTML = id
             ? `
-                <a href="dashboard.html" class="btn btn-outline" style="margin-right:10px">
+                <a
+                    href="dashboard.html"
+                    class="btn btn-outline"
+                    style="margin-right:10px"
+                >
                     Painel
                 </a>
 
-                <button onclick="Pages.logout()" class="btn btn-primary">
+                <button
+                    onclick="Pages.logout()"
+                    class="btn btn-primary"
+                >
                     Sair
                 </button>
             `
             : `
-                <a href="login.html" class="btn btn-outline" style="margin-right:10px">
+                <a
+                    href="login.html"
+                    class="btn btn-outline"
+                    style="margin-right:10px"
+                >
                     Login
                 </a>
 
-                <a href="register.html" class="btn btn-primary">
+                <a
+                    href="register.html"
+                    class="btn btn-primary"
+                >
                     Criar Conta
                 </a>
             `;
@@ -147,6 +184,8 @@ const Pages = {
             payload
         );
 
+        console.log('LOGIN DATA:', data);
+
         Storage.setUserId(data.id);
 
         UI.toast('Login realizado com sucesso!');
@@ -182,11 +221,20 @@ const Pages = {
             ? data.links.map(link => `
                 <div class="link-item animate">
                     <div>
-                        <p style="color:var(--primary); font-weight:bold">
+                        <p
+                            style="
+                                color:var(--primary);
+                                font-weight:bold
+                            "
+                        >
                             /${link.shortId}
                         </p>
 
-                        <small style="color:var(--text-muted)">
+                        <small
+                            style="
+                                color:var(--text-muted)
+                            "
+                        >
                             ${link.originalUrl}
                         </small>
                     </div>
@@ -243,8 +291,11 @@ const Pages = {
 
         if (!form) return;
 
-        form.querySelector('[name="name"]').value = data.name || '';
-        form.querySelector('[name="email"]').value = data.email || '';
+        form.querySelector('[name="name"]').value =
+            data.name || '';
+
+        form.querySelector('[name="email"]').value =
+            data.email || '';
     },
 
     async updateProfile(e) {
@@ -259,7 +310,8 @@ const Pages = {
             email: form.querySelector('[name="email"]').value
         };
 
-        const password = form.querySelector('[name="password"]').value;
+        const password =
+            form.querySelector('[name="password"]').value;
 
         if (password) {
             payload.password = password;
@@ -282,7 +334,9 @@ const Pages = {
         if (!confirmDelete) return;
 
         await API.call(
-            AppConfig.ENDPOINTS.USER(Storage.getUserId()),
+            AppConfig.ENDPOINTS.USER(
+                Storage.getUserId()
+            ),
             'DELETE'
         );
 
@@ -307,28 +361,44 @@ const Pages = {
 document.addEventListener('DOMContentLoaded', () => {
     UI.updateNav();
 
-    const loginForm = document.getElementById('login-form');
+    const loginForm =
+        document.getElementById('login-form');
 
     if (loginForm) {
-        loginForm.addEventListener('submit', Pages.login);
+        loginForm.addEventListener(
+            'submit',
+            Pages.login
+        );
     }
 
-    const registerForm = document.getElementById('register-form');
+    const registerForm =
+        document.getElementById('register-form');
 
     if (registerForm) {
-        registerForm.addEventListener('submit', Pages.register);
+        registerForm.addEventListener(
+            'submit',
+            Pages.register
+        );
     }
 
-    const shortenForm = document.getElementById('shorten-form');
+    const shortenForm =
+        document.getElementById('shorten-form');
 
     if (shortenForm) {
-        shortenForm.addEventListener('submit', Pages.shorten);
+        shortenForm.addEventListener(
+            'submit',
+            Pages.shorten
+        );
     }
 
-    const profileForm = document.getElementById('profile-form');
+    const profileForm =
+        document.getElementById('profile-form');
 
     if (profileForm) {
-        profileForm.addEventListener('submit', Pages.updateProfile);
+        profileForm.addEventListener(
+            'submit',
+            Pages.updateProfile
+        );
     }
 
     const path = window.location.pathname;
