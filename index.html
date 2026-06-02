@@ -16,8 +16,15 @@
                 style="color:var(--primary)">superpoderes</span>.</h1>
         <p class="animate" style="color:var(--text-muted); font-size: 1.2rem; margin-bottom: 2rem;">A plataforma moderna
             para encurtar, gerenciar e proteger suas URLs.</p>
-        <div class="animate"><a href="register.html" class="btn btn-primary" style="font-size: 1.2rem;">Começar
+        <div>
+            <form style="display:flex; gap:10px;">
+                <input type="url" name="url" placeholder="Sua URL longa aqui..." class="form-control" required>
+                <div class="animate"><a href="register.html" class="btn btn-primary" style="font-size: 1.2rem;">Começar
                 Agora</a></div>
+            </form>
+        </div>
+            
+        
     </main>
     <div id="toast" class="toast"></div>
     <script src="script.js"></script>
