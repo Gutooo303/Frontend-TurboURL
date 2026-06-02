@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Login | TurboURL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="brand">
+            Turbo<span>URL</span>
+        </a>
+    </nav>
+
+    <main class="auth-container">
+        <div class="card auth-card animate">
+
+            <h2>Verificação</h2>
+
+            <p>
+                Digite o código enviado para seu e-mail.
+            </p>
+
+            <form onsubmit="Pages.verifyLogin(event)">
+
+                <div>
+                    <label>Código</label>
+
+                    <input type="text" name="code" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Verificar
+                </button>
+
+            </form>
+
+        </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

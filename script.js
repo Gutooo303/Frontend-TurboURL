@@ -3,6 +3,7 @@ const AppConfig = {
     ENDPOINTS: {
         REGISTER: '/user',
         LOGIN: '/login',
+        VERIFY_LOGIN: '/verify-login',
         USER: (id) => `/user/${id}`,
         SHORTEN: (id) => `/user/${id}/short`
     }
@@ -26,6 +27,24 @@ const Storage = {
     clear: () => {
         localStorage.removeItem('turbourl_id');
         localStorage.removeItem('turbourl_name');
+    },
+
+    setVerificationEmail: (email) => {
+        localStorage.setItem(
+            'turbourl_verification_email',
+            email
+        );
+    },
+
+    getVerificationEmail: () =>
+        localStorage.getItem(
+            'turbourl_verification_email'
+        ),
+
+    clearVerificationEmail: () => {
+        localStorage.removeItem(
+            'turbourl_verification_email'
+        );
     }
 };
 
@@ -136,27 +155,29 @@ const Pages = {
             password: form.querySelector('[name="password"]').value
         };
 
-        const data = await API.call(AppConfig.ENDPOINTS.LOGIN, 'POST', payload);
+        const data = await API.call(
+            AppConfig.ENDPOINTS.LOGIN,
+            'POST',
+            payload
+        );
 
-        const userId = data.id || data.user?.id;
-        const userName = data.name || data.user?.name;
+        if (data.requiresVerification) {
 
-        Storage.setUserId(userId);
+            Storage.setVerificationEmail(
+                data.email
+            );
 
-        if (userName) {
-            Storage.setUserName(userName);
-        } else {
-            try {
-                const user = await API.call(AppConfig.ENDPOINTS.USER(userId));
-                Storage.setUserName(user.name);
-            } catch {}
+            UI.toast(
+                'Código enviado para seu e-mail.'
+            );
+
+            setTimeout(() => {
+                window.location.href =
+                    'verify.html';
+            }, 1000);
+
+            return;
         }
-
-        UI.toast('Login realizado com sucesso!');
-
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 900);
     },
 
     async loadDashboard() {
@@ -275,6 +296,49 @@ const Pages = {
         UI.toast('Link copiado!');
     },
 
+    async verifyLogin(e) {
+
+        e.preventDefault();
+
+        const form = e.target;
+
+        const payload = {
+            email:
+                Storage.getVerificationEmail(),
+            code:
+                form.querySelector(
+                    '[name="code"]'
+                ).value
+        };
+
+        const data = await API.call(
+            AppConfig.ENDPOINTS.VERIFY_LOGIN,
+            'POST',
+            payload
+        );
+
+        Storage.clearVerificationEmail();
+
+        Storage.setUserId(
+            data.user.id
+        );
+
+        Storage.setUserName(
+            data.user.name
+        );
+
+        UI.toast(
+            'Login realizado com sucesso!'
+        );
+
+        setTimeout(() => {
+
+            window.location.href =
+                'dashboard.html';
+
+        }, 1000);
+    },
+
     logout() {
         Storage.clear();
         window.location.href = 'index.html';
@@ -288,6 +352,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('register-form')?.addEventListener('submit', Pages.register);
     document.getElementById('shorten-form')?.addEventListener('submit', Pages.shorten);
     document.getElementById('profile-form')?.addEventListener('submit', Pages.updateProfile);
+
+    document.getElementById('verify-form')?.addEventListener(
+        'submit',
+        Pages.verifyLogin
+    );
 
     const path = window.location.pathname;
 
