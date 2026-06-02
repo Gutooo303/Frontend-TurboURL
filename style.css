@@ -204,6 +204,7 @@ input:-webkit-autofill:active {
     background: var(--primary);
     color: #FFFFFF;
     box-shadow: 0 4px 20px rgba(217, 70, 239, 0.3);
+    height: 100%;
 }
 
 .btn-primary:hover:not(:disabled) {
