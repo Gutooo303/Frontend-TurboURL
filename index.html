@@ -3,31 +3,50 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TurboURL | Encurtador de URL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav class="navbar"><a href="index.html" class="brand">Turbo<span>URL</span></a>
+
+    <nav class="navbar">
+        <a href="index.html" class="brand">
+            Turbo<span>URL</span>
+        </a>
+
         <div id="nav-actions"></div>
     </nav>
-    <main class="container" style="padding-top: 150px; text-align: center;">
-        <h1 class="animate" style="font-size: 3.5rem; margin-bottom: 1rem;">Seus links com <span
-                style="color:var(--primary)">superpoderes</span>.</h1>
-        <p class="animate" style="color:var(--text-muted); font-size: 1.2rem; margin-bottom: 2rem;">A platadiva moderna
-            para encurtar, gerenciar e proteger suas URLs.</p>
-        <div>
-            <div class="card animate" style="display: flex; width: max-content; gap: 10px;">
-                <input type="url" name="url" placeholder="Sua URL longa aqui..." class="form-control animate">
-                <div class="animate"><a href="register.html" class="btn btn-primary" style="font-size: 1.2rem; width: max-content;">Começar
-                        Agora</a></div>
+
+    <main class="container hero">
+
+        <h1 class="hero-title animate">
+            Seus links com
+            <span>superpoderes</span>.
+        </h1>
+
+        <p class="hero-subtitle animate">
+            A plataforma moderna para encurtar, gerenciar e proteger suas URLs.
+        </p>
+
+        <div class="hero-form">
+            <div class="card hero-card animate">
+
+                <input type="url" name="url" placeholder="Sua URL longa aqui..." class="form-control">
+
+                <a href="register.html" class="btn btn-primary">
+                    Começar Agora
+                </a>
+
             </div>
         </div>
 
-
     </main>
+
     <div id="toast" class="toast"></div>
+
     <script src="script.js"></script>
+
 </body>
 
 </html>
