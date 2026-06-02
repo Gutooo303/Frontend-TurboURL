@@ -124,6 +124,7 @@ body {
     padding: 0.65rem 1.2rem;
     font-size: 0.95rem;
     white-space: nowrap;
+    min-width: 90px; /* Garante que botões menores como 'Sair' fiquem do mesmo tamanho de 'Painel' */
 }
 
 /* Layout Container */
@@ -204,7 +205,6 @@ input:-webkit-autofill:active {
     background: var(--primary);
     color: #FFFFFF;
     box-shadow: 0 4px 20px rgba(217, 70, 239, 0.3);
-    height: 100%;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -285,7 +285,7 @@ input:-webkit-autofill:active {
 .hero-title span {
     color: var(--primary);
     background: linear-gradient(135deg, #F472B6 0%, var(--primary) 100%);
-    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -585,6 +585,7 @@ input:-webkit-autofill:active {
     #nav-actions .btn {
         padding: 0.55rem 1rem;
         font-size: 0.9rem;
+        min-width: 75px; /* Reduz ligeiramente a largura mínima em tablets para economizar espaço */
     }
 
     .hero-title {
@@ -661,6 +662,7 @@ input:-webkit-autofill:active {
     #nav-actions .btn {
         padding: 0.5rem 0.85rem;
         font-size: 0.85rem;
+        min-width: 65px; /* Ajuste para smartphones pequenos */
     }
 
     .hero {
@@ -726,6 +728,7 @@ input:-webkit-autofill:active {
     #nav-actions .btn {
         padding: 0.45rem 0.75rem;
         font-size: 0.8rem;
+        min-width: 55px;
     }
     
     .hero-title {
