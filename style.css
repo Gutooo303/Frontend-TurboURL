@@ -190,6 +190,10 @@ body {
     }
 }
 
+h1.animate {
+    width: 70%;   
+}
+
 .animate {
     animation: fadeIn 0.4s ease forwards;
 }
