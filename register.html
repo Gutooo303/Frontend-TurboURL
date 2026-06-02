@@ -3,31 +3,41 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Conta | TurboURL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav class="navbar"><a href="index.html" class="brand">Turbo<span>URL</span></a></nav>
-    <main class="container" style="max-width: 450px; padding-top: 120px;">
-        <div class="card animate">
-            <h2 style="margin-bottom: 1.5rem;">Cadastro</h2>
+    <nav class="navbar">
+        <a href="index.html" class="brand">Turbo<span>URL</span></a>
+    </nav>
+    
+    <main class="auth-container">
+        <div class="card auth-card animate">
+            <h2>Cadastro</h2>
             <form onsubmit="Pages.register(event)">
-                <div style="margin-bottom: 1rem;"><label>Nome</label><input type="text" name="name" class="form-control"
-                        required></div>
-                <div style="margin-bottom: 1rem;"><label>E-mail</label><input type="email" name="email"
-                        class="form-control" required></div>
-                <div style="margin-bottom: 1.5rem;"><label>Senha</label><input type="password" name="password"
-                        class="form-control" required></div>
-                <div style="margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-muted);">
-                    <input type="checkbox" id="lgpd" required>
-                    Aceito os <a href="terms.html" style="color:var(--primary)">Termos</a> e a <a href="privacy.html"
-                        style="color:var(--primary)">Política de Privacidade</a>.
+                <div>
+                    <label>Nome</label>
+                    <input type="text" name="name" class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Criar Minha Conta</button>
+                <div>
+                    <label>E-mail</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div>
+                    <label>Senha</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="auth-checkbox">
+                    <input type="checkbox" id="lgpd" required>
+                    <label for="lgpd" style="margin-bottom: 0;">Aceito os <a href="terms.html">Termos</a> e a <a href="privacy.html">Política de Privacidade</a>.</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Criar Minha Conta</button>
             </form>
         </div>
     </main>
+    
     <div id="toast" class="toast"></div>
     <script src="script.js"></script>
 </body>

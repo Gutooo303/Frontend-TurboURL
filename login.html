@@ -3,24 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | TurboURL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav class="navbar"><a href="index.html" class="brand">Turbo<span>URL</span></a></nav>
-    <main class="container" style="max-width: 400px; padding-top: 120px;">
-        <div class="card animate">
-            <h2 style="margin-bottom: 1.5rem;">Acesse sua conta</h2>
+    <nav class="navbar">
+        <a href="index.html" class="brand">Turbo<span>URL</span></a>
+    </nav>
+    
+    <main class="auth-container">
+        <div class="card auth-card animate">
+            <h2>Acesse sua conta</h2>
             <form onsubmit="Pages.login(event)">
-                <div style="margin-bottom: 1rem;"><label>E-mail</label><input type="email" name="email"
-                        class="form-control" required></div>
-                <div style="margin-bottom: 1.5rem;"><label>Senha</label><input type="password" name="password"
-                        class="form-control" required></div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Entrar</button>
+                <div>
+                    <label>E-mail</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div>
+                    <label>Senha</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar</button>
             </form>
         </div>
     </main>
+    
     <div id="toast" class="toast"></div>
     <script src="script.js"></script>
 </body>

@@ -87,7 +87,7 @@ const UI = {
 
         nav.innerHTML = id
             ? `
-                <a href="dashboard.html" class="btn btn-outline" style="margin-right:10px">
+                <a href="dashboard.html" class="btn btn-outline">
                     Painel
                 </a>
                 <button onclick="Pages.logout()" class="btn btn-primary">
@@ -95,7 +95,7 @@ const UI = {
                 </button>
             `
             : `
-                <a href="login.html" class="btn btn-outline" style="margin-right:10px">
+                <a href="login.html" class="btn btn-outline">
                     Login
                 </a>
                 <a href="register.html" class="btn btn-primary">

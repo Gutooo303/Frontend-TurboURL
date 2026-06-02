@@ -3,32 +3,40 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil | TurboURL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav class="navbar"><a href="index.html" class="brand">Turbo<span>URL</span></a>
+    <nav class="navbar">
+        <a href="index.html" class="brand">Turbo<span>URL</span></a>
         <div id="nav-actions"></div>
     </nav>
-    <main class="container" style="max-width: 500px; padding-top: 120px;">
-        <div class="card animate">
-            <h2 style="margin-bottom: 1.5rem;">Configurações</h2>
-            <form onsubmit="Pages.updateProfile(event)">
-                <div style="margin-bottom: 1rem;"><label>Nome</label><input type="text" name="name"
-                        class="form-control"></div>
-                <div style="margin-bottom: 1rem;"><label>E-mail</label><input type="email" name="email"
-                        class="form-control"></div>
-                <div style="margin-bottom: 1.5rem;"><label>Nova Senha (opcional)</label><input type="password"
-                        name="password" class="form-control"></div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Salvar Alterações</button>
+    
+    <main class="auth-container">
+        <div class="card auth-card animate">
+            <h2>Configurações</h2>
+            <form id="profile-form" onsubmit="Pages.updateProfile(event)">
+                <div>
+                    <label>Nome</label>
+                    <input type="text" name="name" class="form-control">
+                </div>
+                <div>
+                    <label>E-mail</label>
+                    <input type="email" name="email" class="form-control">
+                </div>
+                <div>
+                    <label>Nova Senha (opcional)</label>
+                    <input type="password" name="password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Salvar Alterações</button>
             </form>
-            <hr style="border:0; border-top:1px solid var(--border); margin: 2rem 0;">
-            <button onclick="Pages.deleteAccount()" class="btn"
-                style="width:100%; color:var(--danger); border:1px solid var(--danger);">Excluir Conta
-                Permanentemente</button>
+            <hr class="form-divider">
+            <button onclick="Pages.deleteAccount()" class="btn btn-danger btn-full">Excluir Conta Permanentemente</button>
         </div>
     </main>
+    
     <div id="toast" class="toast"></div>
     <script src="script.js"></script>
 </body>
