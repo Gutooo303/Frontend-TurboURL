@@ -125,6 +125,7 @@ body {
     font-size: 0.95rem;
     white-space: nowrap;
     min-width: 90px; /* Garante que botões menores como 'Sair' fiquem do mesmo tamanho de 'Painel' */
+    height: 40px;
 }
 
 /* Layout Container */
